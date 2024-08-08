@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, FC } from 'react';
-import localforage from 'localforage';
+import localforage from "localforage"
 import { Item, CartItem, CartContextType, CartProviderProps } from './utilise/interface';
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
