@@ -1,30 +1,54 @@
+
+
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-// import { Card, CardContent, Typography, Button, CardMedia, IconButton } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import  IconButton  from '@mui/material/IconButton';
+import IconButton from '@mui/material/IconButton';
 import { CartContext } from '../CartContext';
 import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import localforage from 'localforage';
-import {CartContextType } from '../utilise/interface';
+import { CartItem, Item } from '../utilise/interface';
 
 const Cart: React.FC = () => {
-  const { items, setItems } = useContext<CartContextType>(CartContext);
+  const cartContext = useContext(CartContext);
+
+  if (!cartContext) {
+    throw new Error('CartContext must be used within a CartProvider');
+  }
+
+  const { items, setItems } = cartContext;
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
   useEffect(() => {
+    const loadItems = async () => {
+      const keys = await localforage.keys();
+      const loadedItems: CartItem[] = [];
+      for (const key of keys) {
+        const item = await localforage.getItem<Item>(key);
+        if (item) {
+          loadedItems.push({ key, item });
+        }
+      }
+      setItems(loadedItems);
+    };
+
+    loadItems();
+  }, [setItems]);
+
+  useEffect(() => {
     const calculatePrice = () => {
-      const price = items.reduce((acc, itemData) => acc + itemData.item.price, 0);
+      const price = items.reduce((acc, itemData) => {
+        return acc + itemData.item.price}, 0);
       setTotalPrice(price);
     };
     calculatePrice();
   }, [items]);
 
-  const RemoveFromCart = (itemId: number) => {
+   const RemoveFromCart = (itemId: number) => {
     localforage.removeItem(itemId.toString()).then(() => {
       const updatedItems = items.filter(item => item.key !== itemId.toString());
       setItems(updatedItems);
@@ -77,7 +101,7 @@ const Cart: React.FC = () => {
                 <CardContent style={{ flex: '1 0 auto', padding: '16px' }}>
                   <IconButton
                     onClick={() => RemoveFromCart(Number(itemData.key))}
-                    style={{ position: 'absolute', right: '16px',bottom:'10px', color: '#e53935' }}
+                    style={{ position: 'absolute', right: '16px', bottom: '10px', color: '#e53935' }}
                   >
                     <AutoDeleteIcon />
                   </IconButton>

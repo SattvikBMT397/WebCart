@@ -16,6 +16,7 @@ export interface CartItem {
   item: Item;
 }
 
+
 export interface CartContextType {
   items: CartItem[];
   setItems: React.Dispatch<React.SetStateAction<CartItem[]>>;

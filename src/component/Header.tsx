@@ -13,6 +13,7 @@ const Header: React.FC = () => {
   const handleCartOpen = () => {
     setIsCartOpen(true);
     navigate('/cart');
+    console.log(isCartOpen);
   };
 
 

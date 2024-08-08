@@ -1,6 +1,4 @@
-import React from 'react'
 import Display from './component/Display'
-import Header from './component/Header'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Cart from './component/Cart';
 import { CartProvider } from './CartContext';

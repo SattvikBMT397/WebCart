@@ -17,10 +17,11 @@ const CartProvider: FC<CartProviderProps> = ({ children }) => {
     };
     fetchAllItems();
   }, []);
-
+// console.log("cjildren",children)
   return (
     <CartContext.Provider value={{ items, setItems }}>
       {children}
+      
     </CartContext.Provider>
   );
 };
